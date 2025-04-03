@@ -15,11 +15,7 @@ public class TaskService {
 
     // Get the 5 most recent tasks that are not completed
     public List<Task> getRecentTasks() {
-        List<Task> tasks = taskRepository.findAll();
-        tasks.removeIf(Task::isCompleted);  // Remove completed tasks
-        return tasks.stream()
-                .limit(5)  // Limit to the 5 most recent tasks
-                .toList();
+        return taskRepository.findTop5ByIsCompletedFalseOrderByCreatedAtDesc();
     }
 
     // Mark task as completed
