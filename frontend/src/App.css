@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100vh;
+}
+
+.left-container,
+.right-container {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.middle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.vertical-line {
+  width: 2px;
+  background-color: #979797;
+  height: 90%;
+  align-self: center;
+}
+
+.add-task {
+  background: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 70%;
+}
+
+.add-task h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.add-task input {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.add-task input::placeholder {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.add-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 60%;
+}
+
+.task-card {
+  background: #f1f1f1;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;  
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.task-description {
+  font-size: 14px;
+  color: #555;
+}
+
+.done-button {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.done-button:hover {
+  background-color: #218838;
+}
