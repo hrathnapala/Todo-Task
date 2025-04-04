@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
-import TodoList from './Components/TodoList';
+import TodoList from './components/TodoList';
 import { ToastContainer, toast } from 'react-toastify';
 import debounce from 'lodash/debounce';
 import 'react-toastify/dist/ReactToastify.css';
