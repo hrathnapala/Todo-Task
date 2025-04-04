@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import TodoList from './components/TodoList';
+import {TodoList} from './components';
 import { ToastContainer, toast } from 'react-toastify';
 import debounce from 'lodash/debounce';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
+import { getTasks, addTask as addTaskAPI, deleteTask } from './services/taskService';
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: '', description: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const BASE_URL = 'http://localhost:8080/tasks';
 
   useEffect(() => {
     fetchTasks();
@@ -19,7 +18,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(BASE_URL);
+      const response = await getTasks();
       setTasks(response.data);
     } catch (error) {
       toast.error('Failed to load tasks');
@@ -32,7 +31,7 @@ function App() {
     setIsSubmitting(true);
 
     try {
-      await axios.post(BASE_URL, {
+      await addTaskAPI({
         title: newTask.title,
         description: newTask.description,
       });
@@ -58,7 +57,7 @@ function App() {
 
   const handleDeleteTask = async (id) => {
     try {
-      await axios.delete(`${BASE_URL}/${id}`);
+      await deleteTask(id);
       fetchTasks();
       toast.success('Task deleted');
     } catch (error) {
