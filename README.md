@@ -29,7 +29,7 @@ The backend is built with **Spring Boot** and uses **MySQL** as the database. It
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/your-username/todo-task-app.git
+    git clone https://github.com/hrathnapala/Todo-Task.git
     cd todo-task-app/backend
     ```
 
