@@ -1,7 +1,6 @@
-# Project: Todo Task Application
+# Todo Task Application
 
-## Overview
-This is a full-stack Todo application consisting of a **Spring Boot** backend, a **React** frontend, and a **MySQL** database. It provides functionalities such as creating tasks, marking tasks as completed, and deleting tasks. The backend interacts with the database to manage tasks and expose APIs that the frontend consumes.
+This is a full-stack Todo application built using **Spring Boot**, **React**, and **MySQL**. It allows users to create tasks, mark them as completed, and delete them. The backend serves a REST API, while the frontend communicates with the backend to display and manage tasks.
 
 ---
 
@@ -11,6 +10,7 @@ This is a full-stack Todo application consisting of a **Spring Boot** backend, a
   - [Running the Backend](#backend-running)
   - [Endpoints](#backend-endpoints)
   - [Model Details](#backend-model-details)
+  - [application.properties](#applicationproperties)
 - [Frontend](#frontend)
   - [Getting Started](#frontend-getting-started)
   - [Running the Frontend](#frontend-running)
@@ -23,9 +23,9 @@ This is a full-stack Todo application consisting of a **Spring Boot** backend, a
 ## Backend
 
 ### Overview
-The backend of the Todo application is built using **Spring Boot**. It serves as a RESTful API for managing tasks. The backend is connected to a **MySQL** database, where tasks are stored. The backend also includes a **TaskController** class that provides endpoints to create, retrieve, mark, and delete tasks.
+The backend is built with **Spring Boot** and uses **MySQL** as the database. It exposes RESTful APIs for task management and connects to the database using JPA.
 
-### Getting Started
+### Backend Getting Started
 
 1. **Clone the Repository**:
     ```bash
@@ -33,103 +33,65 @@ The backend of the Todo application is built using **Spring Boot**. It serves as
     cd todo-task-app/backend
     ```
 
-2. **Prerequisites**:
-    - Java 11 or higher
-    - Maven or Gradle
-    - Docker (optional, for containerization)
-
-3. **Install Dependencies**:
-    If you're not using Docker, make sure you have Maven or Gradle installed. You can install dependencies using:
+2. **Install Dependencies**:
     ```bash
     mvn clean install
     ```
 
-### Running the Backend
+3. **Prerequisites**:
+    - Java 11 or higher
+    - Maven
+    - MySQL or Docker
+
+### Backend Running
 
 1. **Using Docker**:
-    If you're using Docker to run the entire stack, simply run the following command:
     ```bash
     docker-compose up --build
     ```
 
-    This will build and start the backend service, along with the database.
-
-2. **Running Locally (without Docker)**:
-    To run the Spring Boot backend locally:
+2. **Running Locally Without Docker**:
     ```bash
     mvn spring-boot:run
     ```
 
-    The backend will be available at `http://localhost:8080`.
+    The backend will be available at `http://localhost:8080`
 
-### Endpoints
+### Backend Endpoints
 
-The backend provides the following endpoints:
+- `GET /tasks` - Retrieve the 5 most recent tasks
+- `POST /tasks` - Create a new task
+- `DELETE /tasks/{id}` - Delete a task
 
-- **GET** `/tasks` – Get the 5 most recent tasks
-  - Response:
-    ```json
-    [
-      {
-        "id": 1,
-        "title": "Task Title",
-        "description": "Task description here",
-        "isCompleted": false,
-        "createdAt": "2025-04-03T10:00:00"
-      }
-    ]
-    ```
+Example Responses:
 
-- **PUT** `/tasks/{id}/complete` – Mark a task as completed
-  - Request:
-    ```json
-    {
-      "id": 1
-    }
-    ```
-  - Response:
-    ```json
+- **GET /tasks**:
+  ```json
+  [
     {
       "id": 1,
       "title": "Task Title",
-      "description": "Task description here",
-      "isCompleted": true,
-      "createdAt": "2025-04-03T10:00:00"
-    }
-    ```
-
-- **POST** `/tasks` – Add a new task
-  - Request Body:
-    ```json
-    {
-      "title": "New Task",
       "description": "Task description here"
     }
-    ```
-  - Response:
-    ```json
-    {
-      "id": 1,
-      "title": "New Task",
-      "description": "Task description here",
-      "isCompleted": false,
-      "createdAt": "2025-04-03T10:00:00"
-    }
-    ```
+  ]
+  ```
 
-- **DELETE** `/tasks/{id}` – Delete a task
-  - Response:
-    ```json
-    {
-      "message": "Task deleted successfully"
-    }
-    ```
+- **POST /tasks**:
+  ```json
+  {
+    "title": "New Task",
+    "description": "Task description here"
+  }
+  ```
 
----
+- **DELETE /tasks/1**:
+  ```json
+  {
+    "message": "Task deleted successfully"
+  }
+  ```
 
 ### Backend Model Details
-
-The `Task` model is an entity that represents a task in the database.
 
 ```java
 @Entity
@@ -137,7 +99,6 @@ The `Task` model is an entity that represents a task in the database.
 @NoArgsConstructor
 @AllArgsConstructor
 public class Task {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -149,69 +110,73 @@ public class Task {
 
     @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
-
-    @Column(name = "is_completed", nullable = false)
-    private boolean isCompleted;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @NotNull
-    private Timestamp createdAt;
 }
 ```
 
-- **Title**: Required and must be between 1 and 255 characters.
-- **Description**: Optional but cannot exceed 500 characters.
-- **Is Completed**: Boolean value indicating whether the task is completed.
-- **Created At**: Timestamp indicating when the task was created.
+### application.properties
+
+```properties
+# Application name
+spring.application.name=todo-task-app
+
+# Database configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/tododb?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=yourpassword
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# JPA settings
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+```
 
 ---
 
 ## Frontend
 
 ### Overview
-The frontend is built using **React**. It allows users to interact with the Todo application by adding, viewing, and managing tasks. The frontend communicates with the backend APIs to fetch, create, and delete tasks.
+The frontend is built with **React** and allows users to manage tasks through a web interface. It consumes the REST API exposed by the Spring Boot backend.
 
-### Getting Started
+### Frontend Getting Started
 
-1. **Clone the Repository**:
+1. **Navigate to the frontend folder**:
     ```bash
-    git clone https://github.com/hrathnapala/Todo-Task
-    cd todo-task-app/frontend
+    cd ../frontend
     ```
 
-2. **Prerequisites**:
-    - Node.js (v12 or higher)
-    - npm or yarn
-
-3. **Install Dependencies**:
+2. **Install dependencies**:
     ```bash
     npm install
     # or
     yarn install
     ```
 
-### Running the Frontend
+3. **Prerequisites**:
+    - Node.js (v12 or higher)
+    - npm or yarn
+
+### Frontend Running
 
 1. **Using Docker**:
-    To run the frontend inside a Docker container, use the following command:
     ```bash
     docker-compose up --build
     ```
 
 2. **Running Locally**:
-    To start the development server locally:
     ```bash
     npm start
     # or
     yarn start
     ```
-    The frontend will be available at `http://localhost:3000`.
 
-### App Features
+    The app will run at `http://localhost:3000`
 
-- **Task Management**: Create, update, and delete tasks.
-- **Responsive UI**: The app is fully responsive for mobile and desktop views.
-- **Real-time Updates**: The task list is automatically updated after adding or deleting tasks.
+### Frontend App Features
+
+- Create, delete tasks
+- Responsive design for desktop and mobile
+- Real-time updates to task list
 
 ---
 
@@ -221,29 +186,26 @@ The frontend is built using **React**. It allows users to interact with the Todo
 - Docker
 - Docker Compose
 
-### Running the Application with Docker
+### Running Full Stack with Docker
 
-1. **Build and Start Services**:
-    To build and start the entire application stack (backend, frontend, and database):
+1. **Start all services**:
     ```bash
     docker-compose up --build
     ```
 
-2. **Stopping Services**:
-    To stop all running services:
+2. **Stop all services**:
     ```bash
     docker-compose down
     ```
 
-3. **Clean Volumes (optional)**:
-    If you need to clear the MySQL data and rebuild the containers from scratch, use:
+3. **Remove containers and volumes**:
     ```bash
     docker-compose down -v
     ```
 
-4. **Accessing the Application**:
-    - Backend: `http://localhost:8080`
-    - Frontend: `http://localhost:3000`
+### Application URLs
+- Backend: `http://localhost:8080`
+- Frontend: `http://localhost:3000`
 
 ---
 
@@ -254,19 +216,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 ### Notes
-- Make sure to check the `.env` file for additional environment configurations if needed.
-- Ensure you have Docker and Docker Compose installed for the easiest setup.
-
----
-
-# Application.properties
-- spring.application.name=
-
-- spring.datasource.url=
-- spring.datasource.username=
-- spring.datasource.password=
-- spring.datasource.driver-class-name=
-
-- spring.jpa.hibernate.ddl-auto=update
-- spring.jpa.show-sql=true
-- spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+- Modify the `.env` file or `docker-compose.yml` as needed to match your environment.
+- Ensure Docker and Docker Compose are installed for the easiest setup.
