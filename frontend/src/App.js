@@ -78,7 +78,6 @@ function App() {
           />
           <textarea
             placeholder="Description"
-            className="description-textarea"
             value={newTask.description}
             onChange={(e) =>
               setNewTask({ ...newTask, description: e.target.value })

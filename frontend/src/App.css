@@ -71,6 +71,10 @@
   resize: none;
 }
 
+.add-task textarea::placeholder {
+  padding-top: 30px;
+}
+
 .add-task input:focus::placeholder,
 .add-task textarea:focus::placeholder {
   opacity: 0;
