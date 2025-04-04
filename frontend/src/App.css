@@ -64,14 +64,11 @@
 .add-task textarea::placeholder {
   font-size: 14px;
   color: black;
-  text-align: left;
-  line-height: 80px;
 }
 
 .add-task textarea {
   height: 100px;
   resize: none;
-  overflow: hidden; 
 }
 
 .add-task input:focus::placeholder,
@@ -87,14 +84,19 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 10px;
-  width: 100%;
-  margin-top: 10px;
   width: 35%;
   align-self: flex-end;
 }
 
 .add-button:hover {
   background-color: #0056b3;
+}
+
+.add-button.loading {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transition: all 0.3s ease-in-out;
 }
 
 .task-list {
@@ -112,7 +114,7 @@
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
-} 
+}
 
 .task-card .left {
   display: flex;
@@ -123,7 +125,7 @@
 .task-card .right {
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .task-title {

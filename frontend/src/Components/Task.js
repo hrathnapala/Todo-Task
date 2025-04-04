@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Task({ task, onComplete }) {
+function Task({ task, onDelete }) {
   return (
     <div className="task-card">
       <div className="left">
@@ -8,7 +8,7 @@ function Task({ task, onComplete }) {
         <p className="task-description">{task.description}</p>
       </div>
       <div className="right">
-        <button className="done-button" onClick={() => onComplete(task.id)}>
+        <button className="done-button" onClick={() => onDelete(task.id)}>
           Done
         </button>
       </div>

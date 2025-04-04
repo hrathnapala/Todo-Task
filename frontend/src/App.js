@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import TodoList from './Components/TodoList';
+import { ToastContainer, toast } from 'react-toastify';
+import debounce from 'lodash/debounce';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: '', description: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const BASE_URL = 'http://localhost:8080/tasks';
 
@@ -18,36 +22,47 @@ function App() {
       const response = await axios.get(BASE_URL);
       setTasks(response.data);
     } catch (error) {
-      console.error('Error fetching tasks:', error);
+      toast.error('Failed to load tasks');
     }
   };
 
-  const handleAddTask = async () => {
-    if (newTask.title && newTask.description) {
-      try {
-        const response = await axios.post(BASE_URL, {
-          title: newTask.title,
-          description: newTask.description,
-          isCompleted: false,
-          createdAt: new Date().toISOString(),
-        });
-        
-        // Fetch the latest tasks again after adding the new task
-        fetchTasks();
-        setNewTask({ title: '', description: '' });
-      } catch (error) {
-        console.error('Error adding task:', error);
+  const addTask = async () => {
+    if (!newTask.title || !newTask.description) return;
+
+    setIsSubmitting(true);
+
+    try {
+      await axios.post(BASE_URL, {
+        title: newTask.title,
+        description: newTask.description,
+      });
+      fetchTasks();
+      setNewTask({ title: '', description: '' });
+      toast.success('Task added');
+    } catch (error) {
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message || 'Failed to add task');
+      } else {
+        toast.error('Something went wrong');
       }
     }
-  };
-  
 
-  const handleCompleteTask = async (id) => {
+    setIsSubmitting(false);
+  };
+
+  const debouncedAddTask = useCallback(debounce(addTask, 800), [newTask]);
+
+  const handleAddClick = () => {
+    debouncedAddTask();
+  };
+
+  const handleDeleteTask = async (id) => {
     try {
-      await axios.put(`${BASE_URL}/${id}/complete`);
+      await axios.delete(`${BASE_URL}/${id}`);
       fetchTasks();
+      toast.success('Task deleted');
     } catch (error) {
-      console.error('Error completing task:', error);
+      toast.error('Failed to delete task');
     }
   };
 
@@ -70,8 +85,12 @@ function App() {
               setNewTask({ ...newTask, description: e.target.value })
             }
           />
-          <button className="add-button" onClick={handleAddTask}>
-            Add
+          <button
+            className={`add-button ${isSubmitting ? 'loading' : ''}`}
+            onClick={handleAddClick}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Adding...' : 'Add'}
           </button>
         </div>
       </div>
@@ -79,8 +98,10 @@ function App() {
       <div className="vertical-line"></div>
 
       <div className="right-container">
-        <TodoList tasks={tasks} onComplete={handleCompleteTask} />
+        <TodoList tasks={tasks} onDelete={handleDeleteTask} />
       </div>
+
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
 }

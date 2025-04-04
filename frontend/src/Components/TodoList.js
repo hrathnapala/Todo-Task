@@ -1,11 +1,11 @@
 import React from 'react';
 import Task from './Task';
 
-function TodoList({ tasks, onComplete }) {
+function TodoList({ tasks, onDelete }) {
   return (
     <div className="task-list">
       {tasks.map((task) => (
-        <Task key={task.id} task={task} onComplete={onComplete} />
+        <Task key={task.id} task={task} onDelete={onDelete} />
       ))}
     </div>
   );
